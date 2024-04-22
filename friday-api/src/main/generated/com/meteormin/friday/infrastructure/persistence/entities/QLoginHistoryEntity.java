@@ -33,12 +33,6 @@ public class QLoginHistoryEntity extends EntityPathBase<LoginHistoryEntity> {
 
     public final StringPath ip = createString("ip");
 
-    public final StringPath message = createString("message");
-
-    public final NumberPath<Integer> statusCode = createNumber("statusCode", Integer.class);
-
-    public final BooleanPath success = createBoolean("success");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 

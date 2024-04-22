@@ -6,7 +6,6 @@ import com.meteormin.friday.api.users.request.ResetPasswordRequest;
 import com.meteormin.friday.api.users.request.UpdateUserRequest;
 import com.meteormin.friday.api.users.resource.ResetPasswordResource;
 import com.meteormin.friday.api.users.resource.UserResources.UserResource;
-import com.meteormin.friday.infrastructure.config.JacksonConfiguration;
 import com.meteormin.friday.users.UserDocument;
 import com.meteormin.friday.users.application.port.in.query.RetrieveUserQuery;
 import com.meteormin.friday.users.application.port.in.usecase.UserUsecase;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -45,28 +43,27 @@ class UserControllerTest extends UserDocument {
 
     private void buildUserDomain(Long id) {
         domain = new User(
-            id,
-            faker.internet().safeEmailAddress(),
-            faker.internet().password(),
-            faker.name().fullName(),
-            UserRole.USER,
-            null,
-            null,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            null
-        );
+                id,
+                faker.internet().safeEmailAddress(),
+                faker.internet().password(),
+                faker.name().fullName(),
+                UserRole.USER,
+                null,
+                null,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                null);
     }
 
     private CreateUserRequest buildCreateUserRequest(Long id) {
         buildUserDomain(id);
         return CreateUserRequest
-            .builder()
-            .email(domain.getEmail())
-            .name(domain.getName())
-            .password(domain.getPassword())
-            .role(domain.getRole().value())
-            .build();
+                .builder()
+                .email(domain.getEmail())
+                .name(domain.getName())
+                .password(domain.getPassword())
+                .role(domain.getRole().value())
+                .build();
     }
 
     private UserResource buildCreateUserResponse() {
@@ -99,18 +96,17 @@ class UserControllerTest extends UserDocument {
 
     private UpdateUserRequest buildUpdateUserRequest() {
         return UpdateUserRequest
-            .builder()
-            .name(JsonNullable.of(faker.name().fullName()))
-            .role(JsonNullable.of(UserRole.USER.value()))
-            .build();
+                .builder()
+                .name(JsonNullable.of(faker.name().fullName()))
+                .role(JsonNullable.of(UserRole.USER.value()))
+                .build();
     }
 
     private UserResource buildUpdateUserResponse(Long id, UpdateUserRequest request) {
         buildUserDomain(id);
 
         domain.patch(
-            request.toDomain(id)
-        );
+                request.toDomain(id));
 
         when(userUsecase.patchUser(any())).thenReturn(domain);
 
@@ -128,23 +124,20 @@ class UserControllerTest extends UserDocument {
 
     private ResetPasswordRequest buildResetPasswordRequest() {
         return new ResetPasswordRequest(
-            faker.internet().password()
-        );
+                faker.internet().password());
     }
 
     private ResetPasswordResource buildResetPasswordResponse(Long id,
-        ResetPasswordRequest request) {
+            ResetPasswordRequest request) {
         buildUserDomain(id);
 
         domain.resetPassword(
-            passwordEncoder.encode(request.password())
-        );
+                passwordEncoder.encode(request.password()));
 
         boolean isMatches = passwordEncoder.matches(request.password(), domain.getPassword());
 
         when(userUsecase.resetPassword(any())).thenReturn(
-            isMatches
-        );
+                isMatches);
 
         return new ResetPasswordResource(isMatches);
     }

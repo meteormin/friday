@@ -34,56 +34,52 @@ public abstract class AbstractAcceptanceTest {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         fakeInjector = new FakeInjector(
-            new Faker(),
-            objectMapper
-        );
+                new Faker(),
+                objectMapper);
     }
 
     @BeforeEach
     public void setUp() throws Exception {
         RestAssured.port = port;
-
-        var faker = fakeInjector.getFaker();
     }
 
     protected Token loginTest() {
         var req = new PasswordAuthentication(
-            fakeInjector.getFaker().internet().safeEmailAddress(),
-            fakeInjector.getFaker().internet().password(),
-            "secret"
-        );
+                fakeInjector.getFaker().internet().safeEmailAddress(),
+                fakeInjector.getFaker().internet().password(),
+                "secret");
 
         ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .header("Content-Type", "application/json")
-            .header("Accept", "application/json")
-            .body(req)
-            .when()
-            .post(SecurityConfiguration.LOGIN_URL)
-            .then().log().all()
-            .extract();
+                .given().log().all()
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .body(req)
+                .when()
+                .post(SecurityConfiguration.LOGIN_URL)
+                .then().log().all()
+                .extract();
         assertThat(response.statusCode()).isEqualTo(201);
 
         PasswordTokenResponse token = response
-            .body().as(PasswordTokenResponse.class);
+                .body().as(PasswordTokenResponse.class);
 
         assertThat(token).isNotNull()
-            .hasFieldOrProperty("id")
-            .hasFieldOrProperty("email")
-            .hasFieldOrProperty("name")
-            .hasFieldOrProperty("tokens.tokenType")
-            .hasFieldOrProperty("tokens.accessToken")
-            .hasFieldOrProperty("tokens.expiresIn")
-            .hasFieldOrProperty("tokens.refreshToken");
+                .hasFieldOrProperty("id")
+                .hasFieldOrProperty("email")
+                .hasFieldOrProperty("name")
+                .hasFieldOrProperty("tokens.tokenType")
+                .hasFieldOrProperty("tokens.accessToken")
+                .hasFieldOrProperty("tokens.expiresIn")
+                .hasFieldOrProperty("tokens.refreshToken");
 
         accessToken = token.tokens()
-            .accessToken();
+                .accessToken();
 
         return Token.builder()
-            .accessToken(accessToken)
-            .refreshToken(token.tokens().refreshToken())
-            .tokenType(token.tokens().tokenType())
-            .expiresIn(token.tokens().expiresIn())
-            .build();
+                .accessToken(accessToken)
+                .refreshToken(token.tokens().refreshToken())
+                .tokenType(token.tokens().tokenType())
+                .expiresIn(token.tokens().expiresIn())
+                .build();
     }
 }

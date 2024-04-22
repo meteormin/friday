@@ -172,7 +172,7 @@ springdoc:
         display-request-duration: true
         urls:
             - url: /openapi/friday-api.json
-            - name: api
+              name: api
     show-actuator: true
     default-consumes-media-type: application/json
     default-produces-media-type: application/json
