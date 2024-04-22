@@ -2,7 +2,7 @@ package com.meteormin.friday.uploads.application.service;
 
 import com.meteormin.friday.common.error.RestErrorCode;
 import com.meteormin.friday.common.error.RestErrorException;
-import com.meteormin.friday.common.hexagon.annotation.Usecase;
+import com.meteormin.friday.hexagon.annotation.Usecase;
 import com.meteormin.friday.common.request.UploadFile;
 import com.meteormin.friday.uploads.application.exception.NotFoundUploadFileException;
 import com.meteormin.friday.uploads.application.port.in.UploadUsecase;
@@ -19,9 +19,9 @@ public class UploadService implements UploadUsecase {
     private final UploadPort port;
 
     @Override
-    public UploadFileDomain upload(UploadFile uploadFile) {
+    public UploadFileDomain upload(Long userId, UploadFile uploadFile) {
         try {
-            return port.upload(uploadFile);
+            return port.upload(userId, uploadFile);
         } catch (IOException e) {
             throw new RestErrorException(RestErrorCode.UPLOAD_ERROR, e);
         }
@@ -30,7 +30,7 @@ public class UploadService implements UploadUsecase {
     @Override
     public UploadFileDomain findById(Long id) {
         return port.findById(id)
-            .orElseThrow(NotFoundUploadFileException::new);
+                .orElseThrow(NotFoundUploadFileException::new);
     }
 
     @Override

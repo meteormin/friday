@@ -6,8 +6,8 @@ import com.meteormin.friday.auth.application.port.in.query.RetrieveUserInfoQuery
 import com.meteormin.friday.auth.application.port.in.usecase.AuthUsecase;
 import com.meteormin.friday.auth.domain.Auth;
 import com.meteormin.friday.auth.domain.Token;
-import com.meteormin.friday.common.hexagon.BaseController;
-import com.meteormin.friday.common.hexagon.annotation.RestAdapter;
+import com.meteormin.friday.hexagon.BaseController;
+import com.meteormin.friday.hexagon.annotation.RestAdapter;
 import com.meteormin.friday.infrastructure.config.SecurityConfiguration;
 import com.meteormin.friday.infrastructure.security.auth.PasswordAuthentication;
 import com.meteormin.friday.infrastructure.security.auth.response.PasswordTokenResponse;
@@ -40,14 +40,14 @@ public class AuthController extends BaseController implements AuthApi {
      */
     @PostMapping(SecurityConfiguration.SIGNUP_URL)
     public ResponseEntity<AuthUserResource> signup(
-        @Valid @RequestBody PasswordUserInfo authentication) {
+            @Valid @RequestBody PasswordUserInfo authentication) {
         // Call the authService.signup() method to sign up the user and get the user information
 
         var authDomain = Auth.builder()
-            .email(authentication.email())
-            .name(authentication.name())
-            .password(authentication.password())
-            .build();
+                .email(authentication.email())
+                .name(authentication.name())
+                .password(authentication.password())
+                .build();
 
         var user = authUsecase.signup(authDomain);
 
@@ -81,13 +81,13 @@ public class AuthController extends BaseController implements AuthApi {
      */
     @PostMapping(SecurityConfiguration.REFRESH_URL)
     public ResponseEntity<Token> refresh(
-        @RequestHeader(name = "RefreshToken") String refreshToken) {
+            @RequestHeader(name = "RefreshToken") String refreshToken) {
         // Call the authService to refresh the token
         var tokens = authUsecase.refreshToken(refreshToken);
         // Create a response entity with the issued access token
         var uri = createUriFromContextPath(SecurityConfiguration.USERINFO_URL);
         return ResponseEntity
-            .created(uri).body(tokens);
+                .created(uri).body(tokens);
     }
 
     @GetMapping(SecurityConfiguration.USERINFO_URL)

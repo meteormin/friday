@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UploadPort {
-    UploadFileDomain upload(UploadFile uploadFile) throws IOException;
+    UploadFileDomain upload(Long userId, UploadFile uploadFile) throws IOException;
 
     Optional<UploadFileDomain> findById(Long id);
 

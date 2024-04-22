@@ -18,12 +18,12 @@ public interface FileSystemAdapter {
     /**
      * Saves a file at the specified path.
      *
-     * @param path          the path where the file will be saved
+     * @param path the path where the file will be saved
      * @param multipartFile the file to be saved
      * @return true if the file was successfully saved, false otherwise
      * @throws IOException if there is an error while saving the file
      */
-    boolean save(String path, MultipartFile multipartFile) throws IOException;
+    boolean put(String path, MultipartFile multipartFile) throws IOException;
 
     /**
      * Retrieves the URL for the given path.

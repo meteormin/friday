@@ -1,4 +1,4 @@
-package com.meteormin.friday.common.hexagon.annotation;
+package com.meteormin.friday.hexagon.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -61,16 +61,21 @@ public class FileEntity extends BaseEntity<Long> {
     private UserEntity user;
 
     public static FileEntity create(
-        @NonNull String mimeType,
-        @NonNull Long size,
-        @NonNull String path,
-        @NonNull String extension
-    ) {
+            @NonNull String mimeType,
+            @NonNull Long size,
+            @NonNull String path,
+            @NonNull String originName,
+            @NonNull String convName,
+            @NonNull String extension,
+            @NonNull UserEntity user) {
         return FileEntity.builder()
-            .mimeType(mimeType)
-            .size(size)
-            .path(path)
-            .extension(extension)
-            .build();
+                .mimeType(mimeType)
+                .size(size)
+                .path(path)
+                .originName(originName)
+                .convName(convName)
+                .extension(extension)
+                .user(user)
+                .build();
     }
 }

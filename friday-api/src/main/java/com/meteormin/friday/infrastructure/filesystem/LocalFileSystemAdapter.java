@@ -25,9 +25,8 @@ import java.nio.file.Paths;
 @Component
 @RequiredArgsConstructor
 public class LocalFileSystemAdapter implements FileSystemAdapter {
-
     @Override
-    public boolean save(String filePath, MultipartFile multipartFile) throws IOException {
+    public boolean put(String filePath, MultipartFile multipartFile) throws IOException {
         Path path = Paths.get(filePath);
 
         Files.createDirectories(path.getParent());
@@ -80,10 +79,10 @@ public class LocalFileSystemAdapter implements FileSystemAdapter {
         }
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-            .contentLength(contentLength)
-            .contentType(mediaType)
-            .body(resource);
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .contentLength(contentLength)
+                .contentType(mediaType)
+                .body(resource);
     }
 
     @Override

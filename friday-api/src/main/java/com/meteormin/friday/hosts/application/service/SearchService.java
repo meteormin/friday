@@ -1,7 +1,7 @@
 package com.meteormin.friday.hosts.application.service;
 
 import com.meteormin.friday.common.error.ForbiddenErrorException;
-import com.meteormin.friday.common.hexagon.annotation.Usecase;
+import com.meteormin.friday.hexagon.annotation.Usecase;
 import com.meteormin.friday.hosts.application.exception.ExistsSearchException;
 import com.meteormin.friday.hosts.application.exception.NotFoundSearchException;
 import com.meteormin.friday.hosts.application.port.in.query.RetrieveSearchQuery;
@@ -49,7 +49,7 @@ public class SearchService implements SearchUsecase, RetrieveSearchQuery {
         }
 
         return searchPort.findSearchById(ids.id())
-            .orElseThrow(NotFoundSearchException::new);
+                .orElseThrow(NotFoundSearchException::new);
     }
 
     /**
@@ -61,19 +61,19 @@ public class SearchService implements SearchUsecase, RetrieveSearchQuery {
     @Override
     public Search createSearch(CreateSearch search) {
         var ids = SearchIds.builder()
-            .hostId(search.hostId())
-            .userId(search.userId())
-            .build();
+                .hostId(search.hostId())
+                .userId(search.userId())
+                .build();
 
         if (inaccessibleToSearch(ids)) {
             throw new ForbiddenErrorException();
         }
 
         var where = WhereSearch.builder()
-            .hostId(search.hostId())
-            .queryKey(search.queryKey())
-            .query(search.query())
-            .build();
+                .hostId(search.hostId())
+                .queryKey(search.queryKey())
+                .query(search.query())
+                .build();
 
         if (searchPort.isUniqueSearch(where)) {
             throw new ExistsSearchException();
@@ -95,7 +95,7 @@ public class SearchService implements SearchUsecase, RetrieveSearchQuery {
         }
 
         var exists = searchPort.findSearchById(updateSearch.ids().id())
-            .orElseThrow(NotFoundSearchException::new);
+                .orElseThrow(NotFoundSearchException::new);
 
         exists.patch(updateSearch);
         return searchPort.updateSearch(exists);
@@ -112,7 +112,7 @@ public class SearchService implements SearchUsecase, RetrieveSearchQuery {
             throw new ForbiddenErrorException();
         }
         var domain = searchPort.findSearchById(ids.id())
-            .orElseThrow(NotFoundSearchException::new);
+                .orElseThrow(NotFoundSearchException::new);
 
         searchPort.deleteSearchById(domain.getId());
     }
@@ -125,7 +125,7 @@ public class SearchService implements SearchUsecase, RetrieveSearchQuery {
      */
     private boolean inaccessibleToSearch(SearchIds ids) {
         var host = hostPort.findById(ids.hostId())
-            .orElse(null);
+                .orElse(null);
 
         if (host == null) {
             return false;

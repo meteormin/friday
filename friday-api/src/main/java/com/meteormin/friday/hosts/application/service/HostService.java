@@ -1,7 +1,7 @@
 package com.meteormin.friday.hosts.application.service;
 
 import com.meteormin.friday.common.error.ForbiddenErrorException;
-import com.meteormin.friday.common.hexagon.annotation.Usecase;
+import com.meteormin.friday.hexagon.annotation.Usecase;
 import com.meteormin.friday.hosts.application.exception.ExistsHostException;
 import com.meteormin.friday.hosts.application.exception.NotFoundHostException;
 import com.meteormin.friday.hosts.application.port.in.query.RetrieveHostQuery;
@@ -29,8 +29,7 @@ public class HostService implements HostUsecase, RetrieveHostQuery {
     @Override
     public Host retrieveHostById(HostIds findHostById) {
         var host = hostPort.findById(findHostById.id()).orElseThrow(
-            NotFoundHostException::new
-        );
+                NotFoundHostException::new);
 
         if (!host.getUserId().equals(findHostById.userId())) {
             throw new ForbiddenErrorException();
@@ -48,8 +47,7 @@ public class HostService implements HostUsecase, RetrieveHostQuery {
     @Override
     public Host retrieveHost(WhereHost whereHost) {
         return hostPort.findByHost(whereHost).orElseThrow(
-            NotFoundHostException::new
-        );
+                NotFoundHostException::new);
     }
 
     /**
@@ -71,14 +69,13 @@ public class HostService implements HostUsecase, RetrieveHostQuery {
      * Retrieves a page of hosts based on the specified publish filter and pagination settings.
      *
      * @param wherePublish the filter to apply when retrieving hosts
-     * @param pageable     the pagination settings
+     * @param pageable the pagination settings
      * @return the page of hosts that match the filter and pagination settings
      */
     @Override
     public Page<Host> retrieveHostByPublish(
-        WherePublish wherePublish,
-        Pageable pageable
-    ) {
+            WherePublish wherePublish,
+            Pageable pageable) {
         return hostPort.findByPublish(wherePublish, pageable);
     }
 
@@ -91,9 +88,9 @@ public class HostService implements HostUsecase, RetrieveHostQuery {
     @Override
     public Host createHost(CreateHost host) {
         WhereHost whereHost = WhereHost.builder()
-            .host(host.host())
-            .userId(host.userId())
-            .build();
+                .host(host.host())
+                .userId(host.userId())
+                .build();
 
         if (!hostPort.isUniqueHost(whereHost)) {
             throw new ExistsHostException();
@@ -111,8 +108,7 @@ public class HostService implements HostUsecase, RetrieveHostQuery {
     @Override
     public Host patchHost(PatchHost patchHost) {
         var exists = hostPort.findById(patchHost.ids().id()).orElseThrow(
-            NotFoundHostException::new
-        );
+                NotFoundHostException::new);
 
         if (!exists.getUserId().equals(patchHost.ids().userId())) {
             throw new ForbiddenErrorException();
@@ -131,8 +127,8 @@ public class HostService implements HostUsecase, RetrieveHostQuery {
     @Override
     public void deleteHostById(HostIds ids) {
         var deletable = hostPort.findById(ids.id())
-            .orElseThrow(NotFoundHostException::new)
-            .getUserId().equals(ids.userId());
+                .orElseThrow(NotFoundHostException::new)
+                .getUserId().equals(ids.userId());
 
         if (!deletable) {
             throw new ForbiddenErrorException();

@@ -6,7 +6,7 @@ import com.meteormin.friday.auth.domain.Auth;
 import com.meteormin.friday.auth.domain.Token;
 import com.meteormin.friday.common.error.RestErrorCode;
 import com.meteormin.friday.common.error.RestErrorException;
-import com.meteormin.friday.common.hexagon.annotation.PersistenceAdapter;
+import com.meteormin.friday.hexagon.annotation.PersistenceAdapter;
 import com.meteormin.friday.infrastructure.jwt.JwtProvider;
 import com.meteormin.friday.infrastructure.jwt.JwtService;
 import com.meteormin.friday.infrastructure.persistence.entities.UserEntity;
@@ -32,12 +32,11 @@ public class AuthAdapter implements AuthPort {
         try {
             userDetailsService.setPasswordEncoder(passwordEncoder);
             var principalUserInfo = userDetailsService.create(
-                PasswordUserInfo.builder()
-                    .email(authentication.getEmail())
-                    .name(authentication.getName())
-                    .password(passwordEncoder.encode(authentication.getPassword()))
-                    .build()
-            );
+                    PasswordUserInfo.builder()
+                            .email(authentication.getEmail())
+                            .name(authentication.getName())
+                            .password(passwordEncoder.encode(authentication.getPassword()))
+                            .build());
             return authMapper.toAuthDomain(principalUserInfo);
         } catch (Exception e) {
             throw new RestErrorException("auth.error.exists", RestErrorCode.CONFLICT, e);
@@ -52,17 +51,15 @@ public class AuthAdapter implements AuthPort {
 
         if (!tokenType.equals(JwtProvider.BEARER)) {
             throw new RestErrorException(
-                "error.unsupportedTokenType",
-                RestErrorCode.UNSUPPORTED_TOKEN_TYPE
-            );
+                    "error.unsupportedTokenType",
+                    RestErrorCode.UNSUPPORTED_TOKEN_TYPE);
         }
 
         UserEntity user = jwtService.getUserByRefreshToken(token).orElse(null);
         if (user == null) {
             throw new RestErrorException(
-                "error.userNotFound",
-                RestErrorCode.ACCESS_DENIED
-            );
+                    "error.userNotFound",
+                    RestErrorCode.ACCESS_DENIED);
         }
 
         var issueToken = jwtService.issueToken(user.getId());
@@ -91,15 +88,14 @@ public class AuthAdapter implements AuthPort {
 
     private PrincipalUserInfo userInfo() {
         return (PrincipalUserInfo) SecurityContextHolder
-            .getContext()
-            .getAuthentication()
-            .getPrincipal();
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
     }
 
     private RestErrorException userNotExists() {
         return new RestErrorException(
-            "auth.error.notFound",
-            RestErrorCode.NOT_FOUND
-        );
+                "auth.error.notFound",
+                RestErrorCode.NOT_FOUND);
     }
 }

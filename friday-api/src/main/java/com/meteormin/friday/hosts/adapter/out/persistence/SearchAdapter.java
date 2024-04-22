@@ -1,6 +1,6 @@
 package com.meteormin.friday.hosts.adapter.out.persistence;
 
-import com.meteormin.friday.common.hexagon.annotation.PersistenceAdapter;
+import com.meteormin.friday.hexagon.annotation.PersistenceAdapter;
 import com.meteormin.friday.hosts.adapter.out.persistence.mapper.SearchMapper;
 import com.meteormin.friday.hosts.application.exception.NotFoundHostException;
 import com.meteormin.friday.hosts.application.port.out.SearchPort;
@@ -23,26 +23,25 @@ public class SearchAdapter implements SearchPort {
     public Search createSearch(Search search) {
         var entity = searchMapper.createSearchEntity(search);
         return searchMapper.toSearchDomain(
-            searchRepository.save(entity));
+                searchRepository.save(entity));
     }
 
     @Override
     public boolean isUniqueSearch(WhereSearch whereSearch) {
         return searchRepository.existsByHostIdAndQueryKeyAndQuery(
-            whereSearch.hostId(),
-            whereSearch.queryKey(),
-            whereSearch.query()
-        );
+                whereSearch.hostId(),
+                whereSearch.queryKey(),
+                whereSearch.query());
     }
 
     @Override
     public Search updateSearch(Search search) {
         var searchEntity = searchRepository.findById(search.getHostId())
-            .orElseThrow(NotFoundHostException::new);
+                .orElseThrow(NotFoundHostException::new);
 
         searchMapper.updateSearchEntity(searchEntity, search);
         return searchMapper.toSearchDomain(
-            searchRepository.save(searchEntity));
+                searchRepository.save(searchEntity));
     }
 
     @Override
@@ -53,7 +52,7 @@ public class SearchAdapter implements SearchPort {
     @Override
     public Page<Search> findSearchAll(SearchFilter searchFilter) {
         return searchRepository.findSearches(searchFilter)
-            .map(searchMapper::toSearchDomain);
+                .map(searchMapper::toSearchDomain);
     }
 
     @Override

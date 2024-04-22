@@ -1,6 +1,6 @@
 package com.meteormin.friday.common.error;
 
-import com.meteormin.friday.common.hexagon.annotation.RestAdapter;
+import com.meteormin.friday.hexagon.annotation.RestAdapter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.context.annotation.Profile;
@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Error Controller</p>
- * <p>just show error codes</p>
+ * <p>
+ * Error Controller
+ * </p>
+ * <p>
+ * just show error codes
+ * </p>
  *
  * @author seongminyoo
  * @since 2023/11/20
@@ -24,16 +28,16 @@ public class ErrorController {
     /**
      * ErrorDetails - About error code's details
      *
-     * @param code           error code
+     * @param code error code
      * @param httpStatusCode http status code
-     * @param title          error title
-     * @param description    error description
+     * @param title error title
+     * @param description error description
      */
     public record ErrorDetail(
-        int code,
-        int httpStatusCode,
-        String title,
-        String description) {
+            int code,
+            int httpStatusCode,
+            String title,
+            String description) {
     }
 
     /**
@@ -42,17 +46,16 @@ public class ErrorController {
      * @return A list of ErrorDetail objects representing the error codes.
      */
     @Operation(summary = "error code list",
-        description = "error code list")
+            description = "error code list")
     @GetMapping("")
     public ResponseEntity<List<ErrorDetail>> errors() {
         List<ErrorDetail> errorDetails = new ArrayList<>();
         for (RestErrorCode errorCode : RestErrorCode.values()) {
             errorDetails.add(new ErrorDetail(
-                errorCode.getErrorCode(),
-                errorCode.getStatusCode(),
-                errorCode.getTitle(),
-                errorCode.getDescription()
-            ));
+                    errorCode.getErrorCode(),
+                    errorCode.getStatusCode(),
+                    errorCode.getTitle(),
+                    errorCode.getDescription()));
         }
 
         return ResponseEntity.ok(errorDetails);

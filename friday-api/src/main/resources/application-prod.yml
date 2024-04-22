@@ -1,45 +1,45 @@
 server:
-  undertow:
-    threads:
-      io: 4
-      worker: 200
+    undertow:
+        threads:
+            io: 4
+            worker: 200
 spring:
-  h2:
-    console:
-      enabled: false
-  datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 4
-  jpa:
-    show-sql: false
-    hibernate:
-      ddl-auto: validate
-  devtools:
-    add-properties: false
-    restart:
-      enabled: false
+    h2:
+        console:
+            enabled: false
+    datasource:
+        url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        driver-class-name: org.postgresql.Driver
+        hikari:
+            maximum-pool-size: 4
+    jpa:
+        show-sql: false
+        hibernate:
+            ddl-auto: validate
+    devtools:
+        add-properties: false
+        restart:
+            enabled: false
 logging:
-  level:
-    root: warn
-    undertow: warn
-    org.springframework.web: error
-    org.springframework.core.LocalVariableTableParameterNameDiscoverer: error
-    org.springframework.security: error
-    org.springframework.data: error
-    org.hibernate: error
-    com.com.meteormin.friday: error
-    com.com.meteormin.friday.infrastructure.aspect: info
-    com.com.meteormin.friday.infrastructure.advice: info
-    com.com.meteormin.friday.infrastructure.task: info
+    level:
+        root: warn
+        undertow: warn
+        org.springframework.web: error
+        org.springframework.core.LocalVariableTableParameterNameDiscoverer: error
+        org.springframework.security: error
+        org.springframework.data: error
+        org.hibernate: error
+        com.com.meteormin.friday: error
+        com.com.meteormin.friday.infrastructure.aspect: info
+        com.com.meteormin.friday.infrastructure.advice: info
+        com.com.meteormin.friday.infrastructure.task: info
 springdoc:
-  swagger-ui:
-    enabled: false
+    swagger-ui:
+        enabled: false
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health, info, metrics
+    endpoints:
+        web:
+            exposure:
+                include: health, info, metrics

@@ -6,7 +6,7 @@ import com.meteormin.friday.uploads.domain.UploadFileDomain;
 import java.util.List;
 
 public interface UploadUsecase {
-    UploadFileDomain upload(UploadFile uploadFileDomain);
+    UploadFileDomain upload(Long userId, UploadFile uploadFileDomain);
 
     UploadFileDomain findById(Long id);
 

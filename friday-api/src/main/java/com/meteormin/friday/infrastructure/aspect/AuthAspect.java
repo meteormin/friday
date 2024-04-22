@@ -2,7 +2,6 @@ package com.meteormin.friday.infrastructure.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meteormin.friday.auth.domain.Token;
-import com.meteormin.friday.common.error.RestErrorException;
 import com.meteormin.friday.infrastructure.persistence.entities.AccessTokenEntity;
 import com.meteormin.friday.infrastructure.persistence.entities.LoginHistoryEntity;
 import com.meteormin.friday.infrastructure.persistence.entities.UserEntity;
@@ -47,20 +46,20 @@ public class AuthAspect extends LoggingAspect {
     /**
      * AuthAspect Constructor
      *
-     * @param userEntityRepository         user entity repository
-     * @param accessTokenEntityRepository  access token entity repository
+     * @param userEntityRepository user entity repository
+     * @param accessTokenEntityRepository access token entity repository
      * @param loginHistoryEntityRepository login history entity repository
-     * @param objectMapper                 object mapper
+     * @param objectMapper object mapper
      */
     public AuthAspect(
-        UserEntityRepository userEntityRepository,
-        AccessTokenEntityRepository accessTokenEntityRepository,
-        LoginHistoryEntityRepository loginHistoryEntityRepository,
-        ObjectMapper objectMapper) {
+            UserEntityRepository userEntityRepository,
+            AccessTokenEntityRepository accessTokenEntityRepository,
+            LoginHistoryEntityRepository loginHistoryEntityRepository,
+            ObjectMapper objectMapper) {
         super(
-            "Auth",
-            LoggerFactory.getLogger(AuthAspect.class),
-            objectMapper);
+                "Auth",
+                LoggerFactory.getLogger(AuthAspect.class),
+                objectMapper);
         this.userEntityRepository = userEntityRepository;
         this.accessTokenEntityRepository = accessTokenEntityRepository;
         this.loginHistoryEntityRepository = loginHistoryEntityRepository;
@@ -68,15 +67,14 @@ public class AuthAspect extends LoggingAspect {
 
     /**
      * AOP: login end point pointcut
-     * <p>If has {@link com.meteormin.friday.infrastructure.aspect.annotation.LoginEndPoint}
-     * annotation</p>
+     * <p>
+     * If has {@link com.meteormin.friday.infrastructure.aspect.annotation.LoginEndPoint} annotation
+     * </p>
      *
      * @see com.meteormin.friday.infrastructure.aspect.annotation.LoginEndPoint
      */
-    @Pointcut(
-        "@annotation(com.meteormin.friday.infrastructure.aspect.annotation.LoginEndPoint)")
-    public void loginEndPoint() {
-    }
+    @Pointcut("@annotation(com.meteormin.friday.infrastructure.aspect.annotation.LoginEndPoint)")
+    public void loginEndPoint() {}
 
     /**
      * Executes the code before the login endpoint is called.
@@ -86,12 +84,12 @@ public class AuthAspect extends LoggingAspect {
     @Before("loginEndPoint()")
     public void beforeLogin(JoinPoint joinPoint) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-            .currentRequestAttributes())
-            .getRequest();
+                .currentRequestAttributes())
+                        .getRequest();
         log.info("[Before login] {} {} < {}",
-            request.getMethod(),
-            request.getRequestURI(),
-            request.getRemoteHost());
+                request.getMethod(),
+                request.getRequestURI(),
+                request.getRemoteHost());
         beforeLogging("BeforeLogin", joinPoint);
     }
 
@@ -99,28 +97,13 @@ public class AuthAspect extends LoggingAspect {
      * This method is executed after an exception is thrown in the loginEndPoint() pointcut.
      *
      * @param joinPoint the join point at which the exception was thrown
-     * @param e         the exception that was thrown
+     * @param e the exception that was thrown
      */
     @AfterThrowing(pointcut = "loginEndPoint()", throwing = "e")
     public void afterLoginThrowing(JoinPoint joinPoint, Exception e) {
         log.error("[After login Throwing] {}({})",
-            e.getMessage(),
-            e.getClass().getSimpleName());
-
-        var loginHistoryEntity = createFromRequest();
-        loginHistoryEntity.setUser(null);
-        loginHistoryEntity.setSuccess(false);
-        if (e instanceof RestErrorException ex) {
-            var statusCode = ex
-                .getErrorCode()
-                .getStatusCode();
-            loginHistoryEntity.setStatusCode(statusCode);
-        } else {
-            loginHistoryEntity.setStatusCode(500);
-        }
-
-        loginHistoryEntity.setMessage(e.getMessage());
-        loginHistoryEntityRepository.save(loginHistoryEntity);
+                e.getMessage(),
+                e.getClass().getSimpleName());
 
         afterThrowingLogging("AfterLogin", joinPoint, e);
     }
@@ -128,7 +111,7 @@ public class AuthAspect extends LoggingAspect {
     /**
      * After returning advice executed after a method returns successfully.
      *
-     * @param joinPoint   the join point at which the advice is being invoked
+     * @param joinPoint the join point at which the advice is being invoked
      * @param returnValue the value returned by the method
      */
     @AfterReturning(pointcut = "loginEndPoint()", returning = "returnValue")
@@ -145,18 +128,15 @@ public class AuthAspect extends LoggingAspect {
         var loginHistoryEntity = createFromRequest();
 
         loginHistoryEntity.setUser(null);
-        loginHistoryEntity.setSuccess(false);
         if (token != null) {
             var tokenBody = token.getBody();
             if (tokenBody != null && tokenBody.accessToken() != null) {
                 user = accessTokenEntityRepository
-                    .findByToken(tokenBody.accessToken())
-                    .flatMap((AccessTokenEntity tokenEntity) ->
-                        userEntityRepository.findById(Long.valueOf(tokenEntity.getUserId()))
-                    ).orElse(null);
+                        .findByToken(tokenBody.accessToken())
+                        .flatMap((AccessTokenEntity tokenEntity) -> userEntityRepository
+                                .findById(Long.valueOf(tokenEntity.getUserId())))
+                        .orElse(null);
                 loginHistoryEntity.setUser(user);
-                loginHistoryEntity.setSuccess(true);
-                loginHistoryEntity.setStatusCode(token.getStatusCode().value());
             }
         }
 
@@ -169,8 +149,7 @@ public class AuthAspect extends LoggingAspect {
      * Auth controller point
      */
     @Pointcut("within(com.meteormin.friday.auth.adapter.in.rest.AuthController)")
-    public void authControllerPoint() {
-    }
+    public void authControllerPoint() {}
 
     /**
      * AuthController executing around request
@@ -198,7 +177,7 @@ public class AuthAspect extends LoggingAspect {
     /**
      * AuthController executing after request
      *
-     * @param joinPoint   the join point at which the advice is applied
+     * @param joinPoint the join point at which the advice is applied
      * @param returnValue the return value of the method
      */
     @AfterReturning(pointcut = "authControllerPoint()", returning = "returnValue")
@@ -210,7 +189,7 @@ public class AuthAspect extends LoggingAspect {
      * AuthController executing after throwing request
      *
      * @param joinPoint the join point at which the advice is applied
-     * @param e         the exception
+     * @param e the exception
      */
     @AfterThrowing(pointcut = "authControllerPoint()", throwing = "e")
     public void afterAuthThrowing(JoinPoint joinPoint, Exception e) {
@@ -221,8 +200,7 @@ public class AuthAspect extends LoggingAspect {
      * Auth Persistence point
      */
     @Pointcut("within(com.meteormin.friday.auth.adapter.out.persistence.AuthAdapter)")
-    public void authPersistencePoint() {
-    }
+    public void authPersistencePoint() {}
 
     /**
      * AuthPersistence executing around request
@@ -237,7 +215,7 @@ public class AuthAspect extends LoggingAspect {
     /**
      * AuthPersistence executing after request
      *
-     * @param joinPoint   the join point at which the advice is applied
+     * @param joinPoint the join point at which the advice is applied
      * @param returnValue the return value of the method
      */
     @AfterReturning(pointcut = "authPersistencePoint()", returning = "returnValue")
@@ -249,7 +227,7 @@ public class AuthAspect extends LoggingAspect {
      * AuthPersistence executing after throwing request
      *
      * @param joinPoint the join point at which the advice is applied
-     * @param e         the exception
+     * @param e the exception
      */
     @AfterThrowing(pointcut = "authPersistencePoint()", throwing = "e")
     public void afterAuthPersistenceThrowing(JoinPoint joinPoint, Exception e) {
@@ -263,7 +241,7 @@ public class AuthAspect extends LoggingAspect {
      */
     private LoginHistoryEntity createFromRequest() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-            .currentRequestAttributes()).getRequest();
+                .currentRequestAttributes()).getRequest();
 
         String ip;
         if (request.getHeader("X-Forwarded-For") == null) {
@@ -272,12 +250,6 @@ public class AuthAspect extends LoggingAspect {
             ip = request.getHeader("X-Forwarded-For");
         }
 
-        return LoginHistoryEntity.create(
-            false,
-            0,
-            null,
-            ip,
-            null
-        );
+        return LoginHistoryEntity.create(null, ip);
     }
 }

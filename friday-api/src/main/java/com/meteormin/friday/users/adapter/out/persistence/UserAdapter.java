@@ -1,6 +1,6 @@
 package com.meteormin.friday.users.adapter.out.persistence;
 
-import com.meteormin.friday.common.hexagon.annotation.PersistenceAdapter;
+import com.meteormin.friday.hexagon.annotation.PersistenceAdapter;
 import com.meteormin.friday.infrastructure.persistence.entities.UserEntity;
 import com.meteormin.friday.infrastructure.persistence.repositories.UserEntityRepository;
 import com.meteormin.friday.users.adapter.out.persistence.mapper.UserMapper;
@@ -23,14 +23,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @PersistenceAdapter
 public class UserAdapter
-    implements UserPort {
+        implements UserPort {
     private final UserEntityRepository userRepository;
     private final UserMapper mapper;
 
     @Override
     public User createUser(User domain) {
         var entity = userRepository.save(
-            mapper.createUserEntity(domain));
+                mapper.createUserEntity(domain));
         return mapper.toUserDomain(entity);
     }
 
@@ -55,7 +55,7 @@ public class UserAdapter
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id)
-            .map(mapper::toUserDomain);
+                .map(mapper::toUserDomain);
     }
 
     private User save(UserEntity entity) {

@@ -25,16 +25,6 @@ public class LoginHistoryEntity extends BaseEntity<Long> {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private boolean success;
-
-    @Column(nullable = false)
-    private Integer statusCode;
-
-    @Column(length = 100)
-    @Nullable
-    private String message;
-
     @Column(length = 20)
     @Nullable
     private String ip;
@@ -47,19 +37,10 @@ public class LoginHistoryEntity extends BaseEntity<Long> {
     @JsonBackReference
     private UserEntity user;
 
-    public static LoginHistoryEntity create(
-        boolean success,
-        Integer statusCode,
-        String message,
-        String ip,
-        UserEntity user
-    ) {
+    public static LoginHistoryEntity create(UserEntity user, String ip) {
         return LoginHistoryEntity.builder()
-            .success(success)
-            .statusCode(statusCode)
-            .message(message)
-            .ip(ip)
-            .user(user)
-            .build();
+                .ip(ip)
+                .user(user)
+                .build();
     }
 }

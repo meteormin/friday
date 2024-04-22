@@ -52,20 +52,19 @@ public class AuthResponseHandler {
     /**
      * A method to handle an error response.
      *
-     * @param request   the HTTP servlet request
-     * @param response  the HTTP servlet response
+     * @param request the HTTP servlet request
+     * @param response the HTTP servlet response
      * @param errorCode the error code
-     * @param message   the error message
+     * @param message the error message
      * @throws IOException if an I/O error occurs
      */
     public void handleErrorResponse(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        ErrorCode errorCode,
-        String message
-    ) throws IOException {
+            HttpServletRequest request,
+            HttpServletResponse response,
+            ErrorCode errorCode,
+            String message) throws IOException {
         String translateMessage = messageSource
-            .getMessage(message, null, message, LocaleContextHolder.getLocale());
+                .getMessage(message, null, message, LocaleContextHolder.getLocale());
         var errorResponse = new ErrorResponse(errorCode, translateMessage);
         handleJsonResponse(response, errorCode.getHttpStatus(), errorResponse);
     }
@@ -73,24 +72,24 @@ public class AuthResponseHandler {
     /**
      * Handle the response from the OAuth2 token issuance.
      *
-     * @param request  the HTTP servlet request
+     * @param request the HTTP servlet request
      * @param response the HTTP servlet response
      * @param userInfo the principal user information
-     * @param token    the issued token
+     * @param token the issued token
      * @throws IOException if there is an I/O error while handling the response
      */
     public void handleOAuth2IssueTokenResponse(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        PrincipalUserInfo userInfo,
-        IssueToken token) throws IOException {
+            HttpServletRequest request,
+            HttpServletResponse response,
+            PrincipalUserInfo userInfo,
+            IssueToken token) throws IOException {
 
         OAuth2TokenResponse tokenResponse = new OAuth2TokenResponse(
-            userInfo.getId(),
-            userInfo.getSnsId(),
-            userInfo.getProvider().value(),
-            userInfo.getEmail(),
-            token);
+                userInfo.getId(),
+                userInfo.getSnsId(),
+                userInfo.getProvider().value(),
+                userInfo.getEmail(),
+                token);
 
         handleLoginHistory(request, userInfo.getId());
         handleJsonResponse(response, HttpStatus.CREATED, tokenResponse);
@@ -99,17 +98,16 @@ public class AuthResponseHandler {
     /**
      * Handle the OAuth2 issue token header.
      *
-     * @param request  the HTTP servlet request
+     * @param request the HTTP servlet request
      * @param response the HTTP servlet response
      * @param userInfo the principal user info
-     * @param token    the issue token
+     * @param token the issue token
      */
     public void handleOAuth2IssueTokenHeader(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        PrincipalUserInfo userInfo,
-        IssueToken token
-    ) {
+            HttpServletRequest request,
+            HttpServletResponse response,
+            PrincipalUserInfo userInfo,
+            IssueToken token) {
         handleLoginHistory(request, userInfo.getId());
         response.setStatus(HttpStatus.CREATED.value());
         response.setHeader(token.accessTokenKey(), "Bearer " + token.accessToken());
@@ -119,23 +117,23 @@ public class AuthResponseHandler {
     /**
      * Handles the response for issuing a password token.
      *
-     * @param request  the HTTP request object
+     * @param request the HTTP request object
      * @param response the HTTP response object
      * @param userInfo the principal user information
-     * @param token    the issued token
+     * @param token the issued token
      * @throws IOException if there is an I/O error
      */
     public void handlePasswordIssueTokenResponse(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        PrincipalUserInfo userInfo,
-        IssueToken token) throws IOException {
+            HttpServletRequest request,
+            HttpServletResponse response,
+            PrincipalUserInfo userInfo,
+            IssueToken token) throws IOException {
 
         PasswordTokenResponse tokenResponse = new PasswordTokenResponse(
-            userInfo.getId(),
-            userInfo.getUsername(),
-            userInfo.getName(),
-            token);
+                userInfo.getId(),
+                userInfo.getUsername(),
+                userInfo.getName(),
+                token);
 
         handleLoginHistory(request, userInfo.getId());
         handleJsonResponse(response, HttpStatus.CREATED, tokenResponse);
@@ -145,14 +143,14 @@ public class AuthResponseHandler {
      * Handles the JSON response for the given HTTP response, HTTP status, and response body.
      *
      * @param response the HTTP response object
-     * @param status   the HTTP status code
-     * @param body     the response body object
+     * @param status the HTTP status code
+     * @param body the response body object
      * @throws IOException if there is an error writing the JSON body to the response writer
      */
     private void handleJsonResponse(
-        HttpServletResponse response,
-        HttpStatus status,
-        Object body) throws IOException {
+            HttpServletResponse response,
+            HttpStatus status,
+            Object body) throws IOException {
 
         response.setHeader("Content-Type", "application/json");
         response.setStatus(status.value());
@@ -164,46 +162,17 @@ public class AuthResponseHandler {
      * Handles the login history for a user.
      *
      * @param request the HttpServletRequest object containing the login history information
-     * @param userId  the ID of the user
+     * @param userId the ID of the user
      */
     private void handleLoginHistory(
-        HttpServletRequest request,
-        Long userId) {
+            HttpServletRequest request,
+            Long userId) {
 
         LoginHistoryEntity loginHistoryEntity = createLoginHistoryFromRequest(request);
         UserEntity user = userEntityRepository.findById(userId)
-            .orElse(null);
+                .orElse(null);
 
         loginHistoryEntity.setUser(user);
-        loginHistoryEntity.setSuccess(true);
-        loginHistoryEntity.setStatusCode(HttpStatus.CREATED.value());
-        loginHistoryEntityRepository.save(loginHistoryEntity);
-    }
-
-    /**
-     * Handles the login history by creating a new login history entity from the request, retrieving
-     * the user entity based on the user info, setting the necessary attributes of the login history
-     * entity, and saving it to the login history repository.
-     *
-     * @param request      the HttpServletRequest object representing the incoming request
-     * @param userInfo     the PrincipalUserInfo object containing user information
-     * @param errorCode    the ErrorCode object representing the error code
-     * @param errorMessage the error message to be associated with the login history
-     */
-    private void handleLoginHistory(
-        HttpServletRequest request,
-        PrincipalUserInfo userInfo,
-        ErrorCode errorCode,
-        String errorMessage) {
-
-        LoginHistoryEntity loginHistoryEntity = createLoginHistoryFromRequest(request);
-        UserEntity user = userEntityRepository.findById(userInfo.getId())
-            .orElse(null);
-
-        loginHistoryEntity.setUser(user);
-        loginHistoryEntity.setSuccess(false);
-        loginHistoryEntity.setStatusCode(errorCode.getHttpStatus().value());
-        loginHistoryEntity.setMessage(errorMessage);
         loginHistoryEntityRepository.save(loginHistoryEntity);
     }
 
@@ -221,12 +190,6 @@ public class AuthResponseHandler {
             ip = request.getHeader("X-Forwarded-For");
         }
 
-        return LoginHistoryEntity.create(
-            false,
-            0,
-            null,
-            ip,
-            null
-        );
+        return LoginHistoryEntity.create(null, ip);
     }
 }

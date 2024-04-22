@@ -10,8 +10,8 @@ import com.meteormin.friday.api.users.resource.UserResources;
 import com.meteormin.friday.api.users.resource.UserResources.UserResource;
 import com.meteormin.friday.common.error.RestErrorCode;
 import com.meteormin.friday.common.error.RestErrorException;
-import com.meteormin.friday.common.hexagon.BaseController;
-import com.meteormin.friday.common.hexagon.annotation.RestAdapter;
+import com.meteormin.friday.hexagon.BaseController;
+import com.meteormin.friday.hexagon.annotation.RestAdapter;
 import com.meteormin.friday.common.request.annotation.QueryParam;
 import com.meteormin.friday.infrastructure.security.PrincipalUserInfo;
 import com.meteormin.friday.infrastructure.security.annotation.AuthUser;
@@ -51,12 +51,12 @@ public class UserController extends BaseController implements UserApi {
     @PostMapping
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<UserResource> createUser(
-        @Valid @RequestBody CreateUserRequest request) {
+            @Valid @RequestBody CreateUserRequest request) {
         User create = userUsecase.createUser(request.toDomain());
 
         return ResponseEntity
-            .created(createUri("/{id}", create.getId()))
-            .body(UserResource.fromDomain(create));
+                .created(createUri("/{id}", create.getId()))
+                .body(UserResource.fromDomain(create));
     }
 
     /**
@@ -69,12 +69,11 @@ public class UserController extends BaseController implements UserApi {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('admin', 'user')")
     public ResponseEntity<UserResource> retrieveUser(
-        @PathVariable Long id,
-        @AuthUser PrincipalUserInfo userInfo) {
+            @PathVariable Long id,
+            @AuthUser PrincipalUserInfo userInfo) {
         if (hasAuthority(id, userInfo)) {
             return ResponseEntity.ok(
-                UserResource.fromDomain(readUserQuery.findById(id))
-            );
+                    UserResource.fromDomain(readUserQuery.findById(id)));
         }
 
         throw new RestErrorException(RestErrorCode.FORBIDDEN);
@@ -89,10 +88,10 @@ public class UserController extends BaseController implements UserApi {
     @GetMapping("")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Page<UserResource>> retrieveUsers(
-        @QueryParam @Valid RetrieveUserRequest request,
-        @PageableDefault(page = 1,
-            sort = "createdAt",
-            direction = Direction.DESC) Pageable pageable) {
+            @QueryParam @Valid RetrieveUserRequest request,
+            @PageableDefault(page = 1,
+                    sort = "createdAt",
+                    direction = Direction.DESC) Pageable pageable) {
 
         Page<User> users = readUserQuery.findAll(request.toDomain());
         return ResponseEntity.ok(UserResources.fromDomains(users));
@@ -108,15 +107,14 @@ public class UserController extends BaseController implements UserApi {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('admin', 'user')")
     public ResponseEntity<UserResource> patchUser(
-        @PathVariable Long id,
-        @Valid @RequestBody UpdateUserRequest request,
-        @AuthUser PrincipalUserInfo userInfo) {
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest request,
+            @AuthUser PrincipalUserInfo userInfo) {
 
         if (hasAuthority(id, userInfo)) {
             var updated = userUsecase.patchUser(request.toDomain(id));
             return ResponseEntity.ok(
-                UserResource.fromDomain(updated)
-            );
+                    UserResource.fromDomain(updated));
         }
 
         throw new RestErrorException(RestErrorCode.FORBIDDEN);
@@ -125,7 +123,7 @@ public class UserController extends BaseController implements UserApi {
     /**
      * Resets the password for a user.
      *
-     * @param id       the ID of the user
+     * @param id the ID of the user
      * @param password the new password
      * @return the response entity containing the updated user response
      */
@@ -133,14 +131,13 @@ public class UserController extends BaseController implements UserApi {
     @PatchMapping("/{id}/reset-password")
     @PreAuthorize("hasAnyAuthority('admin','user')")
     public ResponseEntity<ResetPasswordResource> resetPassword(
-        @PathVariable Long id,
-        @RequestBody @Valid ResetPasswordRequest password,
-        @AuthUser PrincipalUserInfo userInfo) {
+            @PathVariable Long id,
+            @RequestBody @Valid ResetPasswordRequest password,
+            @AuthUser PrincipalUserInfo userInfo) {
         if (hasAuthority(id, userInfo)) {
             var updated = userUsecase.resetPassword(password.toDomain(id));
             return ResponseEntity.ok(
-                new ResetPasswordResource(updated)
-            );
+                    new ResetPasswordResource(updated));
         }
         throw new RestErrorException(RestErrorCode.FORBIDDEN);
     }
@@ -155,7 +152,7 @@ public class UserController extends BaseController implements UserApi {
     @PreAuthorize("hasAnyAuthority('admin', 'user')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id,
-        @AuthUser PrincipalUserInfo userInfo) {
+            @AuthUser PrincipalUserInfo userInfo) {
         if (hasAuthority(id, userInfo)) {
             userUsecase.deleteUserById(id);
             return;
@@ -166,8 +163,8 @@ public class UserController extends BaseController implements UserApi {
 
     private boolean hasAuthority(Long reqId, PrincipalUserInfo userInfo) {
         return reqId.equals(userInfo.getId())
-            || userInfo.getAuthorities()
-            .stream()
-            .anyMatch(a -> a.getAuthority().equals("admin"));
+                || userInfo.getAuthorities()
+                        .stream()
+                        .anyMatch(a -> a.getAuthority().equals("admin"));
     }
 }

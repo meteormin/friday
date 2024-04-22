@@ -1,6 +1,6 @@
 package com.meteormin.friday.users.application.service;
 
-import com.meteormin.friday.common.hexagon.annotation.Usecase;
+import com.meteormin.friday.hexagon.annotation.Usecase;
 import com.meteormin.friday.common.pagination.SimplePage;
 import com.meteormin.friday.users.application.exception.ExistsUserException;
 import com.meteormin.friday.users.application.exception.NotFoundUserException;
@@ -44,7 +44,7 @@ public class UserService implements UserUsecase, RetrieveUserQuery {
     @Override
     public User patchUser(PatchUser request) {
         User domain = userPort.findById(request.id())
-            .orElseThrow(NotFoundUserException::new);
+                .orElseThrow(NotFoundUserException::new);
         return userPort.updateUser(domain.patch(request));
     }
 
@@ -59,11 +59,10 @@ public class UserService implements UserUsecase, RetrieveUserQuery {
     }
 
     /**
-     * Retrieves a page of users based on the specified conditions in the given
-     * RetrieveUserCommand.
+     * Retrieves a page of users based on the specified conditions in the given RetrieveUserCommand.
      *
      * @param request the RetrieveUserCommand object containing the search criteria such as email,
-     *                name, created at dates, and updated at dates
+     *        name, created at dates, and updated at dates
      * @return a Page object containing the list of users that match the search criteria
      */
     @Override
@@ -79,11 +78,10 @@ public class UserService implements UserUsecase, RetrieveUserQuery {
         }
 
         return new SimplePage<>(
-            result.getContent(),
-            result.getTotalElements(),
-            result.getPageable(),
-            "users"
-        );
+                result.getContent(),
+                result.getTotalElements(),
+                result.getPageable(),
+                "users");
     }
 
     /**
@@ -95,17 +93,17 @@ public class UserService implements UserUsecase, RetrieveUserQuery {
     @Override
     public User findById(Long id) {
         return userPort.findById(id)
-            .orElseThrow(NotFoundUserException::new);
+                .orElseThrow(NotFoundUserException::new);
     }
 
     @Override
     public boolean resetPassword(ResetPassword restPassword) {
         User user = userPort.findById(restPassword.id())
-            .orElseThrow(NotFoundUserException::new);
+                .orElseThrow(NotFoundUserException::new);
 
         var encPasswd = passwordEncoder.encode(restPassword.password());
         return userPort.resetPassword(
-            user.resetPassword(encPasswd)) != null;
+                user.resetPassword(encPasswd)) != null;
     }
 
     /**

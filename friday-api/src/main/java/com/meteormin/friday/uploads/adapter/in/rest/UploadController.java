@@ -3,8 +3,8 @@ package com.meteormin.friday.uploads.adapter.in.rest;
 import com.meteormin.friday.api.uploads.UploadApi;
 import com.meteormin.friday.api.uploads.resource.UploadFileResources;
 import com.meteormin.friday.api.uploads.resource.UploadFileResources.UploadFileResource;
-import com.meteormin.friday.common.hexagon.BaseController;
-import com.meteormin.friday.common.hexagon.annotation.RestAdapter;
+import com.meteormin.friday.hexagon.BaseController;
+import com.meteormin.friday.hexagon.annotation.RestAdapter;
 import com.meteormin.friday.common.request.UploadFile;
 import com.meteormin.friday.infrastructure.security.PrincipalUserInfo;
 import com.meteormin.friday.infrastructure.security.annotation.AuthUser;
@@ -22,14 +22,15 @@ public class UploadController extends BaseController implements UploadApi {
 
     @Override
     @PostMapping(path = "",
-        consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-        produces = {MediaType.APPLICATION_JSON_VALUE})
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UploadFileResource> upload(
-        @RequestPart(name = "file") UploadFile uploadFile) {
+            @RequestPart(name = "file") UploadFile uploadFile,
+            @AuthUser PrincipalUserInfo userInfo) {
 
-        var domain = usecase.upload(uploadFile);
+        var domain = usecase.upload(userInfo.getId(), uploadFile);
         return ResponseEntity.created(createUri("/", domain.getId()))
-            .body(UploadFileResource.fromDomain(domain));
+                .body(UploadFileResource.fromDomain(domain));
     }
 
     @Override
@@ -40,7 +41,7 @@ public class UploadController extends BaseController implements UploadApi {
 
     @Override
     public ResponseEntity<UploadFileResources> findAll(
-        @AuthUser PrincipalUserInfo userInfo) {
+            @AuthUser PrincipalUserInfo userInfo) {
         var domain = usecase.findAll(userInfo.getId());
         return ResponseEntity.ok(UploadFileResources.fromDomains(domain));
     }
