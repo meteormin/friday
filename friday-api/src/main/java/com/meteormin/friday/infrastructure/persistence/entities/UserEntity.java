@@ -8,8 +8,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
@@ -44,6 +46,7 @@ public class UserEntity extends BaseEntity<Long> {
     @Column
     @NonNull
     @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private SocialProvider provider;
 
     @Column(unique = true)
@@ -57,6 +60,7 @@ public class UserEntity extends BaseEntity<Long> {
 
     @NonNull
     @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private UserRole role;
 
     @Column
@@ -81,38 +85,38 @@ public class UserEntity extends BaseEntity<Long> {
     private List<FileEntity> files = new ArrayList<>();
 
     /**
-     * @param snsId    sns id
+     * @param snsId sns id
      * @param provider provider
-     * @param email    email
+     * @param email email
      * @param password password
-     * @param name     name
-     * @param role     role
+     * @param name name
+     * @param role role
      * @author meteormin
      * @since 2023/09/02
      */
     public static UserEntity create(
-        String snsId,
-        SocialProvider provider,
-        String email,
-        String password,
-        String name,
-        UserRole role) {
+            String snsId,
+            SocialProvider provider,
+            String email,
+            String password,
+            String name,
+            UserRole role) {
         return UserEntity.builder()
-            .snsId(snsId)
-            .provider(provider)
-            .email(email)
-            .password(password)
-            .name(name)
-            .role(role)
-            .build();
+                .snsId(snsId)
+                .provider(provider)
+                .email(email)
+                .password(password)
+                .name(name)
+                .role(role)
+                .build();
     }
 
     /**
      * Updates the password, name, and role of the object.
      *
      * @param password the new password to be set
-     * @param name     the new name to be set
-     * @param role     the new role to be set
+     * @param name the new name to be set
+     * @param role the new role to be set
      */
     public void update(String password, String name, UserRole role) {
         this.password = password;

@@ -50,6 +50,7 @@ services:
             # Java Options
             - JAVA_OPTS=${JAVA_OPTS:-}
             - ADMIN_SERVER_URL=${ADMIN_SERVER_URL:-http://host.docker.internal:4444}
+            - TZ=${TZ:-Asia/Seoul}
     friday-db:
         container_name: friday-db
         image: postgres:16-alpine

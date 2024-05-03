@@ -161,7 +161,7 @@ jwt:
         header: Authorization
     refreshToken:
         expiration: 86400
-        header: RefreshToken
+        header: Refresh-Token
 springdoc:
     swagger-ui:
         path: /api-docs/swagger-ui

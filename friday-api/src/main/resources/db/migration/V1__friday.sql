@@ -10,17 +10,21 @@ CREATE SEQUENCE IF NOT EXISTS search_file_seq START WITH 1 INCREMENT BY 50;
 
 CREATE SEQUENCE IF NOT EXISTS search_seq START WITH 1 INCREMENT BY 50;
 
+CREATE TYPE SocialProvider AS ENUM ('GOOGLE', 'NAVER', 'KAKAO', 'NONE');
+
+CREATE TYPE UserRole AS ENUM ('ADMIN', 'USER', 'MANAGER');
+
 CREATE TABLE auth_user
 (
     id         BIGINT       NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
     sns_id     VARCHAR(255),
-    provider   VARCHAR(255),
-    email      VARCHAR(255),
+    provider   SocialProvider DEFAULT 'NONE' NOT NULL,
+    email      VARCHAR(255) NOT NULL,
     password   VARCHAR(255) NOT NULL,
     name       VARCHAR(255) NOT NULL,
-    role       VARCHAR(255),
+    role       UserRole DEFAULT 'USER' NOT NULL,
     deleted_at TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_auth_user PRIMARY KEY (id)
 );
@@ -61,9 +65,6 @@ CREATE TABLE login_history
     id          BIGINT  NOT NULL,
     created_at  TIMESTAMP WITHOUT TIME ZONE,
     updated_at  TIMESTAMP WITHOUT TIME ZONE,
-    success     BOOLEAN NOT NULL,
-    status_code INTEGER NOT NULL,
-    message     VARCHAR(100),
     ip          VARCHAR(20),
     deleted_at  TIMESTAMP WITHOUT TIME ZONE,
     user_id     BIGINT,

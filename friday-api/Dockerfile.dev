@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim AS development
+FROM openjdk:21-jdk-slim AS development
 
 LABEL maintainer="miniyus"
 

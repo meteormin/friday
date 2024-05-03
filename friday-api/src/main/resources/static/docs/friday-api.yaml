@@ -1,0 +1,556 @@
+openapi: 3.0.1
+info:
+  title: Friday API
+  description: Friday REST API Docs with Swagger UI.
+  version: 0.0.1
+servers:
+- url: http://localhost:8080
+tags:
+- name: users
+  description: Users API
+- name: auth
+  description: Auth Api
+paths:
+  /v1/users:
+    post:
+      tags:
+      - users
+      summary: user api
+      description: user api
+      operationId: create user
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/com.meteormin.friday.api.users.request.CreateUserRequest'
+            examples:
+              create user:
+                value: |-
+                  {
+                    "email" : "aubrey.kuhic@example.com",
+                    "password" : "z31bl8nou25fgtn",
+                    "name" : "Mrs. Arnold Runte",
+                    "role" : "user"
+                  }
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.api.users.resource.UserResources$UserResource'
+              examples:
+                create user:
+                  value: |-
+                    {
+                      "id" : 1,
+                      "email" : "aubrey.kuhic@example.com",
+                      "name" : "Mrs. Arnold Runte",
+                      "role" : "user",
+                      "snsId" : null,
+                      "provider" : null,
+                      "createdAt" : "2024-05-03 14:43:51",
+                      "updatedAt" : "2024-05-03 14:43:51"
+                    }
+      security:
+      - bearerAuthJWT: []
+  /v1/auth/logout:
+    post:
+      tags:
+      - auth
+      summary: auth api
+      description: auth api
+      operationId: auth logout
+      responses:
+        "204":
+          description: "204"
+      security:
+      - bearerAuthJWT: []
+  /v1/auth/me:
+    get:
+      tags:
+      - auth
+      summary: auth api
+      description: auth api
+      operationId: auth user info
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.api.auth.resource.AuthUserResource'
+              examples:
+                auth user info:
+                  value: |-
+                    {
+                      "id" : 1,
+                      "email" : "rogelio.runolfsdottir@hotmail.com",
+                      "name" : "Miguel Abshire III",
+                      "role" : "user",
+                      "snsId" : "Miguel Abshire III",
+                      "provider" : null
+                    }
+      security:
+      - bearerAuthJWT: []
+  /v1/auth/refresh-token:
+    post:
+      tags:
+      - auth
+      summary: auth api
+      description: auth api
+      operationId: auth refresh
+      parameters:
+      - name: RefreshToken
+        in: header
+        description: refresh-token
+        required: true
+        schema:
+          type: string
+        example: refresh
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.infrastructure.jwt.IssueToken'
+              examples:
+                auth refresh:
+                  value: |-
+                    {
+                      "tokenType" : "Bearer",
+                      "accessToken" : "access",
+                      "expiresIn" : 3600,
+                      "refreshToken" : "refresh"
+                    }
+  /v1/auth/signin:
+    post:
+      tags:
+      - auth
+      summary: auth api
+      description: auth api
+      operationId: auth signin
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/com.meteormin.friday.infrastructure.security.auth.PasswordAuthentication'
+            examples:
+              auth signin:
+                value: |-
+                  {
+                    "email" : "roxane.haley@yahoo.com",
+                    "password" : "4ty9f8bsr98518",
+                    "secret" : "secret"
+                  }
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.infrastructure.security.auth.response.PasswordTokenResponse'
+              examples:
+                auth signin:
+                  value: |-
+                    {
+                      "id" : 1,
+                      "email" : "roxane.haley@yahoo.com",
+                      "name" : "Mrs. Rubin Hayes",
+                      "tokens" : {
+                        "tokenType" : "Bearer",
+                        "accessToken" : "access",
+                        "expiresIn" : 3600,
+                        "refreshToken" : "refresh"
+                      }
+                    }
+  /v1/auth/signup:
+    post:
+      tags:
+      - auth
+      summary: auth api
+      description: auth api
+      operationId: auth signup
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/com.meteormin.friday.infrastructure.security.auth.userinfo.PasswordUserInfo'
+            examples:
+              auth signup:
+                value: |-
+                  {
+                    "email" : "brent.upton@example.com",
+                    "password" : "e031flmt",
+                    "name" : "Carmelo Gaylord"
+                  }
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.api.auth.resource.AuthUserResource'
+              examples:
+                auth signup:
+                  value: |-
+                    {
+                      "id" : 1,
+                      "email" : "brent.upton@example.com",
+                      "name" : "Carmelo Gaylord",
+                      "role" : "manager",
+                      "snsId" : null,
+                      "provider" : null
+                    }
+  /v1/users/{id}:
+    get:
+      tags:
+      - users
+      summary: user api
+      description: user api
+      operationId: retrieve user
+      parameters:
+      - name: id
+        in: path
+        description: user identifier
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.api.users.resource.UserResources$UserResource'
+              examples:
+                retrieve user:
+                  value: |-
+                    {
+                      "id" : 1,
+                      "email" : "sanford.nicolas@example.com",
+                      "name" : "Wendi Feeney",
+                      "role" : "user",
+                      "snsId" : null,
+                      "provider" : null,
+                      "createdAt" : "2024-05-03 14:43:51",
+                      "updatedAt" : "2024-05-03 14:43:51"
+                    }
+      security:
+      - bearerAuthJWT: []
+    delete:
+      tags:
+      - users
+      summary: user api
+      description: user api
+      operationId: delete user
+      parameters:
+      - name: id
+        in: path
+        description: user identifier
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: "204"
+      security:
+      - bearerAuthJWT: []
+    patch:
+      tags:
+      - users
+      summary: user api
+      description: user api
+      operationId: update user
+      parameters:
+      - name: id
+        in: path
+        description: user identifier
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/com.meteormin.friday.api.users.request.UpdateUserRequest'
+            examples:
+              update user:
+                value: |-
+                  {
+                    "name" : "Allison Smitham Jr.",
+                    "role" : "user"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.api.users.resource.UserResources$UserResource'
+              examples:
+                update user:
+                  value: |-
+                    {
+                      "id" : 1,
+                      "email" : "jacki.franecki@example.com",
+                      "name" : "Allison Smitham Jr.",
+                      "role" : "user",
+                      "snsId" : null,
+                      "provider" : null,
+                      "createdAt" : "2024-05-03 14:43:51",
+                      "updatedAt" : "2024-05-03 14:43:51"
+                    }
+      security:
+      - bearerAuthJWT: []
+  /v1/users/{id}/reset-password:
+    patch:
+      tags:
+      - users
+      summary: user api
+      description: user api
+      operationId: reset password
+      parameters:
+      - name: id
+        in: path
+        description: user identifier
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/com.meteormin.friday.api.users.request.ResetPasswordRequest'
+            examples:
+              reset password:
+                value: |-
+                  {
+                    "password" : "65b4rlt4lz81"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/com.meteormin.friday.api.users.resource.ResetPasswordResource'
+              examples:
+                reset password:
+                  value: |-
+                    {
+                      "resetPassword" : true
+                    }
+      security:
+      - bearerAuthJWT: []
+components:
+  schemas:
+    com.meteormin.friday.infrastructure.security.auth.response.PasswordTokenResponse:
+      title: com.meteormin.friday.infrastructure.security.auth.response.PasswordTokenResponse
+      required:
+      - email
+      - id
+      - name
+      - tokens
+      type: object
+      properties:
+        name:
+          type: string
+          description: name
+        tokens:
+          required:
+          - accessToken
+          - expiresIn
+          - refreshToken
+          - tokenType
+          type: object
+          properties:
+            expiresIn:
+              type: number
+              description: expiresIn
+            accessToken:
+              type: string
+              description: accessToken
+            tokenType:
+              type: string
+              description: tokenType
+            refreshToken:
+              type: string
+              description: refreshToken
+          description: tokens
+        id:
+          type: number
+          description: id
+        email:
+          type: string
+          description: email
+    com.meteormin.friday.api.auth.resource.AuthUserResource:
+      title: com.meteormin.friday.api.auth.resource.AuthUserResource
+      required:
+      - email
+      - id
+      - name
+      - provider
+      - role
+      - snsId
+      type: object
+      properties:
+        role:
+          type: string
+          description: role
+        name:
+          type: string
+          description: name
+        snsId:
+          type: string
+          description: snsId
+        id:
+          type: number
+          description: id
+        email:
+          type: string
+          description: email
+    com.meteormin.friday.infrastructure.jwt.IssueToken:
+      title: com.meteormin.friday.infrastructure.jwt.IssueToken
+      required:
+      - accessToken
+      - expiresIn
+      - refreshToken
+      - tokenType
+      type: object
+      properties:
+        expiresIn:
+          type: number
+          description: expiresIn
+        accessToken:
+          type: string
+          description: accessToken
+        tokenType:
+          type: string
+          description: tokenType
+        refreshToken:
+          type: string
+          description: refreshToken
+    com.meteormin.friday.api.users.request.UpdateUserRequest:
+      title: com.meteormin.friday.api.users.request.UpdateUserRequest
+      required:
+      - name
+      - role
+      type: object
+      properties:
+        role:
+          type: string
+          description: role
+        name:
+          type: string
+          description: name
+    com.meteormin.friday.api.users.resource.ResetPasswordResource:
+      title: com.meteormin.friday.api.users.resource.ResetPasswordResource
+      required:
+      - resetPassword
+      type: object
+      properties:
+        resetPassword:
+          type: boolean
+          description: reset password
+    com.meteormin.friday.api.users.resource.UserResources$UserResource:
+      title: com.meteormin.friday.api.users.resource.UserResources$UserResource
+      required:
+      - createdAt
+      - email
+      - id
+      - name
+      - provider
+      - role
+      - snsId
+      - updatedAt
+      type: object
+      properties:
+        createdAt:
+          type: string
+          description: createdAt
+        role:
+          type: string
+          description: role
+        name:
+          type: string
+          description: name
+        id:
+          type: number
+          description: id
+        email:
+          type: string
+          description: email
+        updatedAt:
+          type: string
+          description: updatedAt
+    com.meteormin.friday.api.users.request.CreateUserRequest:
+      title: com.meteormin.friday.api.users.request.CreateUserRequest
+      required:
+      - email
+      - name
+      - password
+      - role
+      type: object
+      properties:
+        password:
+          type: string
+          description: password
+        role:
+          type: string
+          description: role
+        name:
+          type: string
+          description: name
+        email:
+          type: string
+          description: email
+    com.meteormin.friday.infrastructure.security.auth.userinfo.PasswordUserInfo:
+      title: com.meteormin.friday.infrastructure.security.auth.userinfo.PasswordUserInfo
+      required:
+      - email
+      - name
+      - password
+      type: object
+      properties:
+        password:
+          type: string
+          description: password
+        name:
+          type: string
+          description: name
+        email:
+          type: string
+          description: email
+    com.meteormin.friday.infrastructure.security.auth.PasswordAuthentication:
+      title: com.meteormin.friday.infrastructure.security.auth.PasswordAuthentication
+      required:
+      - email
+      - password
+      - secret
+      type: object
+      properties:
+        password:
+          type: string
+          description: password
+        secret:
+          type: string
+          description: secret
+        email:
+          type: string
+          description: email
+    com.meteormin.friday.api.users.request.ResetPasswordRequest:
+      title: com.meteormin.friday.api.users.request.ResetPasswordRequest
+      required:
+      - password
+      type: object
+      properties:
+        password:
+          type: string
+          description: password
+  securitySchemes:
+    bearerAuthJWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

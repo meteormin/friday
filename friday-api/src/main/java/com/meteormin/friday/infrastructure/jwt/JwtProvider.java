@@ -16,7 +16,8 @@ import java.util.Optional;
  */
 @Slf4j
 public record JwtProvider(String secret, Long accessTokenExpiration, Long refreshTokenExpiration,
-                          String accessTokenKey, String refreshTokenKey) {
+        String accessTokenKey, String refreshTokenKey) {
+
     public static final String ACCESS_TOKEN_SUBJECT = "accessToken";
     public static final String REFRESH_TOKEN_SUBJECT = "refreshToken";
     public static final String EMAIL_CLAIM = "email";
@@ -25,13 +26,13 @@ public record JwtProvider(String secret, Long accessTokenExpiration, Long refres
     public String createAccessToken(String email) {
         Date now = new Date();
         return JWT.create()
-            .withSubject(ACCESS_TOKEN_SUBJECT)
-            .withExpiresAt(new Date(now.getTime() + (accessTokenExpiration * 1000))) // 토큰 만료 시간
-            // 설정
-            // 클레임으로는 저희는 email 하나만 사용합니다.
-            // 추가적으로 식별자나, 이름 등의 정보를 더 추가하셔도 됩니다.
-            // 추가하실 경우 .withClaim(클래임 이름, 클래임 값) 으로 설정해주시면 됩니다
-            .withClaim(EMAIL_CLAIM, email).sign(Algorithm.HMAC512(secret)); // HMAC512 알고리즘 사용,
+                .withSubject(ACCESS_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + (accessTokenExpiration * 1000))) // 토큰 만료 시간
+                // 설정
+                // 클레임으로는 저희는 email 하나만 사용합니다.
+                // 추가적으로 식별자나, 이름 등의 정보를 더 추가하셔도 됩니다.
+                // 추가하실 경우 .withClaim(클래임 이름, 클래임 값) 으로 설정해주시면 됩니다
+                .withClaim(EMAIL_CLAIM, email).sign(Algorithm.HMAC512(secret)); // HMAC512 알고리즘 사용,
         // application-jwt.yml에서
         // 지정한 secret 키로 암호화
     }
@@ -42,9 +43,9 @@ public record JwtProvider(String secret, Long accessTokenExpiration, Long refres
     public String createRefreshToken() {
         Date now = new Date();
         return JWT.create()
-            .withSubject(REFRESH_TOKEN_SUBJECT)
-            .withExpiresAt(new Date(now.getTime() + (refreshTokenExpiration * 1000)))
-            .sign(Algorithm.HMAC512(secret));
+                .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + (refreshTokenExpiration * 1000)))
+                .sign(Algorithm.HMAC512(secret));
     }
 
     /**
@@ -53,11 +54,10 @@ public record JwtProvider(String secret, Long accessTokenExpiration, Long refres
      */
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessTokenKey))
-            .filter(refreshToken -> refreshToken.startsWith(BEARER))
-            .map(refreshToken -> refreshToken
-                .replace(BEARER, "")
-                .trim()
-            );
+                .filter(refreshToken -> refreshToken.startsWith(BEARER))
+                .map(refreshToken -> refreshToken
+                        .replace(BEARER, "")
+                        .trim());
     }
 
     /**
@@ -68,10 +68,10 @@ public record JwtProvider(String secret, Long accessTokenExpiration, Long refres
         try {
             // 토큰 유효성 검사하는 데에 사용할 알고리즘이 있는 JWT verifier builder 반환
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret)).build() // 반환된 빌더로 JWT
-                // verifier 생성
-                .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
-                .getClaim(EMAIL_CLAIM) // claim(Emial) 가져오기
-                .asString());
+                    // verifier 생성
+                    .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
+                    .getClaim(EMAIL_CLAIM) // claim(Emial) 가져오기
+                    .asString());
         } catch (Exception e) {
             log.error("Failed extract email, invalid JWT Token");
             return Optional.empty();
@@ -82,9 +82,9 @@ public record JwtProvider(String secret, Long accessTokenExpiration, Long refres
         try {
             // 토큰 유효성 검사하는 데에 사용할 알고리즘이 있는 JWT verifier builder 반환
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret)).build() // 반환된 빌더로 JWT
-                // verifier 생성
-                .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
-                .getExpiresAt());
+                    // verifier 생성
+                    .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
+                    .getExpiresAt());
         } catch (Exception e) {
             log.error("Failed extract expiresAt, invalid JWT Token");
             return Optional.empty();
