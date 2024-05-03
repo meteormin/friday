@@ -4,6 +4,7 @@ cd /app
 
 if [ ! -d /app/node_modules ]; then
   yarn install
+  yarn add @craco/craco --save
 fi
 
 yarn run start

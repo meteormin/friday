@@ -34,7 +34,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export interface SideMenuProps extends ToggleableProps {
-    text: { [key: string]: string };
+    readonly text: { [key: string]: string };
 }
 
 export default function SideMenu({ open, toggleDrawer, text }: SideMenuProps) {

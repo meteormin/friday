@@ -1,20 +1,21 @@
-import ApiClient, {ErrorResponse} from '@api/base/ApiClient';
+import ApiClient, { ErrorResponse } from '@api/base/ApiClient';
 import {
     AfterResponseHandler,
     ErrorHandler,
-    ErrorResInterface, PreRequestHandler,
+    ErrorResInterface,
+    PreRequestHandler,
     Token,
-    TokenResponseHandler
+    TokenResponseHandler,
 } from '@api/base/types';
 import BaseClient from '@api/base/BaseClient';
-import {makePath} from '@api/utils/str';
-import {AxiosError, AxiosRequestHeaders} from 'axios';
+import { makePath } from '@api/utils/str';
+import { AxiosError, AxiosRequestHeaders } from 'axios';
 
 /**
  * ClientType
  */
 interface ClientType<T> {
-    new(client: ApiClient): T;
+    new (client: ApiClient): T;
 
     readonly prefix: string;
 }
@@ -139,7 +140,7 @@ export const api = (apiConfig: ApiConfig): ApiClient => {
  * @param {ApiConfig} config - The configuration for the API.
  * @returns {T extends BaseClient} - The new instance of the client type.
  */
-const makeClient = <T extends BaseClient>(
+export const makeClient = <T extends BaseClient>(
     client: ClientType<T>,
     config: ApiConfig,
 ): T => {

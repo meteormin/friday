@@ -1,22 +1,22 @@
 // src/App.tsx
-import React, {useEffect} from 'react';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from '@components/layouts/NavBar';
 import Home from '@pages/Home';
 import About from '@pages/About';
 import SideMenu from '@components/layouts/SideMenu'; // SideMenu import 추가
-import {createTheme, ThemeProvider} from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Host from '@pages/hosts';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function App() {
     const [open, setOpen] = React.useState(true);
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const [sideMenuText, setSideMenuText] = React.useState({});
     const [navText, setNavText] = React.useState({});
@@ -46,15 +46,15 @@ export default function App() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Box sx={{display: 'flex'}}>
+            <Box sx={{ display: 'flex' }}>
                 <Router>
                     <Navbar
                         open={open}
                         toggleDrawer={toggleDrawer}
                         title={t('common.title')}
                         changeLang={changeLanguage}
-                        text={navText}/>
-                    <SideMenu open={open} toggleDrawer={toggleDrawer} text={sideMenuText}/> {/* SideMenu 추가 */}
+                        text={navText} />
+                    <SideMenu open={open} toggleDrawer={toggleDrawer} text={sideMenuText} /> {/* SideMenu 추가 */}
                     <Box
                         component="main"
                         sx={{
@@ -67,12 +67,12 @@ export default function App() {
                             overflow: 'auto',
                         }}
                     >
-                        <Toolbar/>
-                        <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+                        <Toolbar />
+                        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                             <Routes>
-                                <Route path="/" element={<Home/>}/>
-                                <Route path="/about" element={<About/>}/>
-                                <Route path="/hosts" element={<Host/>}/>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/about" element={<About />} />
+                                <Route path="/hosts" element={<Host />} />
                             </Routes>
                         </Container>
                     </Box>
