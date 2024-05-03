@@ -1,12 +1,11 @@
 package com.meteormin.friday.common.error;
 
-import com.meteormin.friday.hexagon.annotation.RestAdapter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import com.meteormin.friday.common.hexagon.annotation.RestAdapter;
 import java.util.ArrayList;
 import java.util.List;
 

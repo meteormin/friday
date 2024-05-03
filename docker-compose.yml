@@ -1,124 +1,123 @@
-version: "3"
 services:
-  friday-api:
-    container_name: friday-api
-    image: friday-api:${DOCKER_ENV:-latest}
-    build:
-      context: ./friday-api
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: friday.jar
-    ports:
-      - "${API_PORT:-8888}:8080"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      - friday-db
-      - friday-redis
-    volumes:
-      - ./api/src/main/resources/:/app/resources
-      - ./infrastructure/data/api/data:/app/data
-      - ./infrastructure/data/api/logs:/app/logs
-    networks:
-      - friday
-    environment:
-      # Application
-      - APP_NAME=${API_NAME:-Friday API}
-      - APP_SECRET=${API_SECRET}
-      - APP_ENV=${APP_ENV}
-      - APP_URL=${API_URL}
-      - LOG_LEVEL=${API_LOG_LEVEL:-debug}
-      - JWT_SECRET=${JWT_SECRET:-secret}
-      # Database
-      - DB_HOST=${DB_HOST:-friday-db}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_PORT=${DB_PORT}
-      # Redis
-      - REDIS_HOST=${REDIS_HOST:-friday-redis}
-      - REDIS_DATABASE=${REDIS_DATABASE:-0}
-      - REDIS_USERNAME=${REDIS_USERNAME:-}
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
-      - REDIS_PORT=${REDIS_PORT:6379}
-      # OAuth2
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - NAVER_CLIENT_ID=${NAVER_CLIENT_ID}
-      - NAVER_CLIENT_SECRET=${NAVER_CLIENT_SECRET}
-      - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
-      - KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET}
-      # Java Options
-      - JAVA_OPTS=${JAVA_OPTS:-}
-      - ADMIN_SERVER_URL=${ADMIN_SERVER_URL:-http://host.docker.internal:4444}
-  friday-db:
-    container_name: friday-db
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - ./infrastructure/data/db:/var/lib/postgresql/data
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "pg_isready",
-          "-q",
-          "-d",
-          "${DB_DATABASE}",
-          "-U",
-          "${DB_USERNAME}",
-        ]
-      retries: 3
-      timeout: 5s
-    networks:
-      - friday
-  friday-redis:
-    container_name: friday-redis
-    image: redis:latest
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
-    networks:
-      - friday
-    volumes:
-      - ./infrastructure/data/redis:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      retries: 3
-      timeout: 5s
-  friday-ui:
-    container_name: friday-ui
-    image: friday-ui:latest
-    build:
-      context: ./friday-ui
-      dockerfile: Dockerfile
-    ports:
-      - "${UI_PORT:-3333}:3000"
-    networks:
-      - friday
-  friday-traafik:
-    image: traefik:latest
-    container_name: friday-traefik
-    environment:
-      API_SERVER_NAME: ${API_SERVER_NAME:-localhost/api}
-      UI_SERVER_NAME: ${UI_SERVER_NAME:-localhost/ui}
-    networks:
-      - friday
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./infrastructure/config/traefik/traefik-ssl.static.yml:/etc/traefik/traefik.yml
-      - ./infrastructure/config/traefik/traefik-ssl.dynamic.yml:/etc/traefik/traefik.dynamic.yml
-      - ./infrastructure/data/letsencrypt:/letsencrypt
-      - ./infrastructure/data/traefik/log:/var/log
+    friday-api:
+        container_name: friday-api
+        image: friday-api:${DOCKER_ENV:-latest}
+        build:
+            context: ./friday-api
+            dockerfile: Dockerfile
+            args:
+                JAR_FILE: friday.jar
+        ports:
+            - "${API_PORT:-8888}:8080"
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        depends_on:
+            - friday-db
+            - friday-redis
+        volumes:
+            - ./api/src/main/resources/:/app/resources
+            - ./infrastructure/data/api/data:/app/data
+            - ./infrastructure/data/api/logs:/app/logs
+        networks:
+            - friday
+        environment:
+            # Application
+            - APP_NAME=${API_NAME:-Friday API}
+            - APP_SECRET=${API_SECRET}
+            - APP_ENV=${APP_ENV}
+            - APP_URL=${API_URL}
+            - LOG_LEVEL=${API_LOG_LEVEL:-debug}
+            - JWT_SECRET=${JWT_SECRET:-secret}
+            # Database
+            - DB_HOST=${DB_HOST:-friday-db}
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_PORT=${DB_PORT}
+            # Redis
+            - REDIS_HOST=${REDIS_HOST:-friday-redis}
+            - REDIS_DATABASE=${REDIS_DATABASE:-0}
+            - REDIS_USERNAME=${REDIS_USERNAME:-}
+            - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+            - REDIS_PORT=${REDIS_PORT:-6379}
+            # OAuth2
+            - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+            - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+            - NAVER_CLIENT_ID=${NAVER_CLIENT_ID}
+            - NAVER_CLIENT_SECRET=${NAVER_CLIENT_SECRET}
+            - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
+            - KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET}
+            # Java Options
+            - JAVA_OPTS=${JAVA_OPTS:-}
+            - ADMIN_SERVER_URL=${ADMIN_SERVER_URL:-http://host.docker.internal:4444}
+    friday-db:
+        container_name: friday-db
+        image: postgres:16-alpine
+        environment:
+            - POSTGRES_DB=${DB_DATABASE}
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - ./infrastructure/data/db:/var/lib/postgresql/data
+        ports:
+            - "${DB_PORT:-5432}:5432"
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "pg_isready",
+                    "-q",
+                    "-d",
+                    "${DB_DATABASE}",
+                    "-U",
+                    "${DB_USERNAME}",
+                ]
+            retries: 3
+            timeout: 5s
+        networks:
+            - friday
+    friday-redis:
+        container_name: friday-redis
+        image: redis:latest
+        ports:
+            - "${REDIS_PORT:-6379}:6379"
+        networks:
+            - friday
+        volumes:
+            - ./infrastructure/data/redis:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            retries: 3
+            timeout: 5s
+    friday-ui:
+        container_name: friday-ui
+        image: friday-ui:latest
+        build:
+            context: ./friday-ui
+            dockerfile: Dockerfile
+        ports:
+            - "${UI_PORT:-3333}:3000"
+        networks:
+            - friday
+    friday-traafik:
+        image: traefik:latest
+        container_name: friday-traefik
+        environment:
+            API_SERVER_NAME: ${API_SERVER_NAME:-localhost/api}
+            UI_SERVER_NAME: ${UI_SERVER_NAME:-localhost/ui}
+        networks:
+            - friday
+        ports:
+            - "80:80"
+            - "443:443"
+            - "8080:8080"
+        restart: always
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./infrastructure/config/traefik/traefik-ssl.static.yml:/etc/traefik/traefik.yml
+            - ./infrastructure/config/traefik/traefik-ssl.dynamic.yml:/etc/traefik/traefik.dynamic.yml
+            - ./infrastructure/data/letsencrypt:/letsencrypt
+            - ./infrastructure/data/traefik/log:/var/log
 networks:
-  friday:
-    driver: bridge
+    friday:
+        driver: bridge

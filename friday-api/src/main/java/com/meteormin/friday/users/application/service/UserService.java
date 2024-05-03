@@ -1,6 +1,6 @@
 package com.meteormin.friday.users.application.service;
 
-import com.meteormin.friday.hexagon.annotation.Usecase;
+import com.meteormin.friday.common.hexagon.annotation.Usecase;
 import com.meteormin.friday.common.pagination.SimplePage;
 import com.meteormin.friday.users.application.exception.ExistsUserException;
 import com.meteormin.friday.users.application.exception.NotFoundUserException;

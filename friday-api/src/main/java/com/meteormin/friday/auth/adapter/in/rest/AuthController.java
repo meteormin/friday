@@ -6,8 +6,8 @@ import com.meteormin.friday.auth.application.port.in.query.RetrieveUserInfoQuery
 import com.meteormin.friday.auth.application.port.in.usecase.AuthUsecase;
 import com.meteormin.friday.auth.domain.Auth;
 import com.meteormin.friday.auth.domain.Token;
-import com.meteormin.friday.hexagon.BaseController;
-import com.meteormin.friday.hexagon.annotation.RestAdapter;
+import com.meteormin.friday.common.hexagon.BaseController;
+import com.meteormin.friday.common.hexagon.annotation.RestAdapter;
 import com.meteormin.friday.infrastructure.config.SecurityConfiguration;
 import com.meteormin.friday.infrastructure.security.auth.PasswordAuthentication;
 import com.meteormin.friday.infrastructure.security.auth.response.PasswordTokenResponse;

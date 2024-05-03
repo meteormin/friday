@@ -1,4 +1,4 @@
-package com.meteormin.friday.hexagon;
+package com.meteormin.friday.common.hexagon;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -41,8 +41,8 @@ public abstract class BaseController {
 
     protected URI createUriFromContextPath(String path, Object... args) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path(path)
-            .buildAndExpand(args)
-            .toUri();
+                .path(path)
+                .buildAndExpand(args)
+                .toUri();
     }
 }

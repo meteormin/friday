@@ -1,6 +1,6 @@
 package com.meteormin.friday.uploads.adapter.out.persistence;
 
-import com.meteormin.friday.hexagon.annotation.PersistenceAdapter;
+import com.meteormin.friday.common.hexagon.annotation.PersistenceAdapter;
 import com.meteormin.friday.common.request.UploadFile;
 import com.meteormin.friday.infrastructure.filesystem.FileSystemManager;
 import com.meteormin.friday.infrastructure.filesystem.LocalFileSystemAdapter;

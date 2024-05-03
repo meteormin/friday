@@ -6,7 +6,7 @@ import com.meteormin.friday.auth.domain.Auth;
 import com.meteormin.friday.auth.domain.Token;
 import com.meteormin.friday.common.error.RestErrorCode;
 import com.meteormin.friday.common.error.RestErrorException;
-import com.meteormin.friday.hexagon.annotation.PersistenceAdapter;
+import com.meteormin.friday.common.hexagon.annotation.PersistenceAdapter;
 import com.meteormin.friday.infrastructure.jwt.JwtProvider;
 import com.meteormin.friday.infrastructure.jwt.JwtService;
 import com.meteormin.friday.infrastructure.persistence.entities.UserEntity;

@@ -1,7 +1,7 @@
 package com.meteormin.friday.hosts.application.service;
 
 import com.meteormin.friday.common.error.ForbiddenErrorException;
-import com.meteormin.friday.hexagon.annotation.Usecase;
+import com.meteormin.friday.common.hexagon.annotation.Usecase;
 import com.meteormin.friday.hosts.application.exception.ExistsHostException;
 import com.meteormin.friday.hosts.application.exception.NotFoundHostException;
 import com.meteormin.friday.hosts.application.port.in.query.RetrieveHostQuery;

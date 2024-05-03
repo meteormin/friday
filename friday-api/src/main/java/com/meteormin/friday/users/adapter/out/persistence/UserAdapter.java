@@ -1,6 +1,6 @@
 package com.meteormin.friday.users.adapter.out.persistence;
 
-import com.meteormin.friday.hexagon.annotation.PersistenceAdapter;
+import com.meteormin.friday.common.hexagon.annotation.PersistenceAdapter;
 import com.meteormin.friday.infrastructure.persistence.entities.UserEntity;
 import com.meteormin.friday.infrastructure.persistence.repositories.UserEntityRepository;
 import com.meteormin.friday.users.adapter.out.persistence.mapper.UserMapper;

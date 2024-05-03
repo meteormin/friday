@@ -2,7 +2,7 @@ package com.meteormin.friday.uploads.application.service;
 
 import com.meteormin.friday.common.error.RestErrorCode;
 import com.meteormin.friday.common.error.RestErrorException;
-import com.meteormin.friday.hexagon.annotation.Usecase;
+import com.meteormin.friday.common.hexagon.annotation.Usecase;
 import com.meteormin.friday.common.request.UploadFile;
 import com.meteormin.friday.uploads.application.exception.NotFoundUploadFileException;
 import com.meteormin.friday.uploads.application.port.in.UploadUsecase;

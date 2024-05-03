@@ -1,6 +1,6 @@
 package com.meteormin.friday.hosts.adapter.out.persistence;
 
-import com.meteormin.friday.hexagon.annotation.PersistenceAdapter;
+import com.meteormin.friday.common.hexagon.annotation.PersistenceAdapter;
 import com.meteormin.friday.hosts.adapter.out.persistence.mapper.HostMapper;
 import com.meteormin.friday.hosts.application.exception.NotFoundHostException;
 import com.meteormin.friday.hosts.application.port.out.HostPort;

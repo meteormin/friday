@@ -116,6 +116,7 @@ class JwtServiceTest {
                 .expiration(3600L)
                 .type(JwtProvider.BEARER)
                 .accessTokenId("1")
+                .userId("1")
                 .build();
 
         when(refreshTokenRepository.save(any())).thenReturn(

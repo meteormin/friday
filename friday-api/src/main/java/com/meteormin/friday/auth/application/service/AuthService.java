@@ -5,7 +5,7 @@ import com.meteormin.friday.auth.application.port.in.usecase.AuthUsecase;
 import com.meteormin.friday.auth.application.port.out.AuthPort;
 import com.meteormin.friday.auth.domain.Auth;
 import com.meteormin.friday.auth.domain.Token;
-import com.meteormin.friday.hexagon.annotation.Usecase;
+import com.meteormin.friday.common.hexagon.annotation.Usecase;
 import lombok.RequiredArgsConstructor;
 
 @Usecase
